@@ -5,9 +5,14 @@
 **a. Initial design**
 
 - Briefly describe your initial UML design.
+  The initial UML design consists of four classes: `Owner`, `Pet`, `Task`, and `Scheduler`. `Owner` has a one-to-many relationship with `Pet` — one owner can have multiple pets. `Pet` similarly has a one-to-many relationship with `Task` — each pet can have multiple tasks. `Scheduler` depends on `Owner`'s pet list to aggregate and manage tasks across all pets, allowing it to sort tasks by due date and handle recurring tasks.
 - What classes did you include, and what responsibilities did you assign to each?
-
-**b. Design changes**
+  The four classes are `Owner`, `Pet`, `Task`, and `Scheduler`.
+  - The `Owner` class holds a `name` attribute and a list of `Pet` objects, with methods to add a pet, retrieve the names of all pets, and display the schedule for a specific pet.
+  - The `Pet` class stores the pet's `name`, `type`, and a list of `Task` objects, and has methods to add and remove tasks from that list.
+  - The `Task` class holds the task's `name`, `due_date`, an `is_recurring` flag, and a `status`, with a single `update_status` method that takes a new status string and updates the task accordingly.
+  - The `Scheduler` class receives the owner's list of pets as its attribute, giving it access to all tasks across all pets. Its methods allow it to retrieve all tasks sorted by due date, filter for recurring tasks, and aggregate tasks across pets.
+  **b. Design changes**
 
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
