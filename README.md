@@ -41,3 +41,19 @@ pip install -r requirements.txt
 5. Add tests to verify key behaviors.
 6. Connect your logic to the Streamlit UI in `app.py`.
 7. Refine UML so it matches what you actually built.
+
+## Smarter Scheduling
+
+The `Scheduler` class has been extended with four algorithmic features:
+
+**Sort by time** (`sort_by_time`)
+All tasks across every pet are ordered by time-of-day using a lambda that formats `due_date` as an `"HH:MM"` string. This surfaces the daily routine pattern regardless of which calendar date a task falls on.
+
+**Filter tasks** (`filter_tasks`)
+Tasks can be narrowed by completion status (`"pending"` / `"done"`), by pet name, or both at once. Both parameters are optional — omitting one skips that filter entirely.
+
+**Auto-rescheduling** (`Task.frequency` + `Scheduler.mark_task_complete`)
+Tasks now carry an optional `frequency` field (`"daily"` or `"weekly"`). When `mark_task_complete` is called, it delegates to `Task.mark_complete()`, which marks the task done and returns a new instance shifted forward by one day (`timedelta(days=1)`) or one week (`timedelta(weeks=1)`). The Scheduler then adds the new task to the correct pet automatically, keeping recurring routines alive without manual re-entry.
+
+**Conflict detection** (`detect_conflicts`)
+The scheduler groups all tasks by their exact `"YYYY-MM-DD HH:MM"` slot. Any slot with more than one task produces a human-readable warning string. The method never raises an exception — callers receive an empty list when the schedule is clean.
