@@ -57,3 +57,29 @@ Tasks now carry an optional `frequency` field (`"daily"` or `"weekly"`). When `m
 
 **Conflict detection** (`detect_conflicts`)
 The scheduler groups all tasks by their exact `"YYYY-MM-DD HH:MM"` slot. Any slot with more than one task produces a human-readable warning string. The method never raises an exception — callers receive an empty list when the schedule is clean.
+
+## Testing PawPal+
+
+### Run the tests
+
+```bash
+python -m pytest tests/test_pawpal.py -v
+```
+
+### What the tests cover
+
+The suite contains 32 tests organized across four areas:
+
+**Recurrence logic** — Confirms that marking a `daily` task complete creates a new task for the following day at the same time, and that a `weekly` task advances by 7 days. Also verifies that completing a one-time task returns `None` and does not grow the pet's task list.
+
+**Sorting correctness** — Verifies that `sort_by_time()` returns tasks in chronological time-of-day order regardless of insertion order or which calendar date a task falls on. Also checks that `get_tasks_by_date()` returns only tasks matching the queried date, sorted ascending by full datetime.
+
+**Conflict detection** — Verifies that `detect_conflicts()` returns an empty list when no tasks overlap, produces exactly one `WARNING` string when two tasks share the same minute slot, and lists all tasks in the warning when three or more collide at the same time.
+
+**Edge cases** — Covers a `Scheduler` with no pets, a pet with no tasks, filtering by an unknown pet name, crossing month/year boundaries during recurrence, and ensuring that both status and pet-name filters are AND-ed (not OR-ed) when combined.
+
+### Confidence Level
+
+★★★★☆ (4/5)
+
+The core scheduling behaviors — recurrence, sorting, conflict detection, and filtering — are all verified and passing. One star is withheld because the current tests do not cover the Streamlit UI layer (`app.py`) or the `Owner.display_schedule()` output, leaving some user-facing paths untested.
