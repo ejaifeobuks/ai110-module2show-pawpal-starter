@@ -88,7 +88,39 @@
 
 ---
 
-## 5. Reflection
+## 5. AI Strategy — VS Code Copilot Experience
+
+**a. Most effective Copilot features**
+
+The two features that contributed most were **inline completions** and **chat with context**.
+
+Inline completions were most valuable during repetitive but error-prone work — writing the `filter_tasks` method, for example. Once the method signature and docstring were in place, Copilot correctly inferred the filtering pattern from the existing `get_all_tasks()` call above it and suggested the list comprehension structure without prompting. This saved time on boilerplate while keeping the logic readable.
+
+Chat with context was most useful for algorithm decisions. Asking "what is the cleanest way to group tasks by time slot for conflict detection?" inside the editor — with `pawpal_system.py` open — produced a focused suggestion using a `dict` with `setdefault`, which matched the existing code style better than a `defaultdict` import would have. Having the file open meant the suggestion fit the project rather than being generic Python.
+
+**b. One suggestion rejected or modified**
+
+When drafting the `sort_by_time` method, Copilot suggested sorting by the full `due_date` datetime object directly:
+
+```python
+return sorted(self.get_all_tasks(), key=lambda task: task.due_date)
+```
+
+This was rejected. Sorting by full datetime means a task due tomorrow at 7 AM would appear before a task due today at 9 PM — the output would reflect chronological event order across multiple days rather than the daily routine pattern the method is meant to show. The final version sorts by `task.due_date.strftime("%H:%M")` to isolate time-of-day. The suggestion was technically correct Python but architecturally wrong for the use case. Accepting it would have made `sort_by_time` and `get_tasks_by_date` redundant and confused their distinct purposes.
+
+**c. How separate chat sessions helped**
+
+Using a new chat session for each project phase — UML design, implementation, testing, reflection — prevented earlier context from bleeding into later decisions. During the testing phase, for instance, starting fresh meant the AI focused on what the code *actually did* rather than on what the design phase had *intended* it to do. This mattered when the `get_all_tasks_sorted` vs. `sort_by_time` discrepancy came up: a session that had been open since the design phase might have reinforced the stale name rather than flagging it. Separate sessions forced each phase to be grounded in the current state of the codebase.
+
+**d. Being the "lead architect"**
+
+The central lesson was that AI is a fast, fluent collaborator that has no stake in the design — it will suggest whatever fits the immediate prompt, not whatever fits the long-term system. That makes the human's role explicitly architectural: deciding what belongs in `Task` versus `Scheduler`, keeping method responsibilities from overlapping, and pushing back when a suggestion is technically correct but violates a design boundary.
+
+In practice this meant treating every AI suggestion as a pull request from a junior developer: read it, evaluate whether it fits the system's existing patterns and responsibilities, and either merge it, modify it, or close it with a reason. The AI produced better output when given architectural constraints upfront ("the `Scheduler` should not know about `Owner`, only `Pet`") than when given open-ended prompts. The lead architect's job is to set those constraints and hold them consistently across every session.
+
+---
+
+## 6. Reflection
 
 **a. What went well**
 
