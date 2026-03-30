@@ -42,6 +42,16 @@ pip install -r requirements.txt
 6. Connect your logic to the Streamlit UI in `app.py`.
 7. Refine UML so it matches what you actually built.
 
+## Features
+
+- **Owner & pet profiles** — Create an owner, add multiple pets (dog, cat, rabbit, bird, etc.), and manage them from a persistent sidebar.
+- **Task management** — Add named care tasks (walks, feeding, meds, grooming, etc.) to any pet with a due time and optional recurrence frequency.
+- **Sorting by time** — All tasks across every pet are sorted chronologically by time-of-day, giving a clean daily view regardless of which pet a task belongs to.
+- **Conflict warnings** — The scheduler automatically detects when two or more tasks are scheduled at the exact same minute and surfaces a human-readable warning for each conflict.
+- **Daily & weekly recurrence** — Tasks marked `daily` or `weekly` auto-schedule their next occurrence the moment they are completed — no manual re-entry needed.
+- **Filter by status or pet** — Narrow the task list to `pending` or `done` tasks, limit results to a single pet, or combine both filters at once.
+- **Mark complete** — Mark any pending task done directly from the UI; recurring tasks immediately generate their next occurrence in the schedule.
+
 ## Smarter Scheduling
 
 The `Scheduler` class has been extended with four algorithmic features:
@@ -83,3 +93,7 @@ The suite contains 32 tests organized across four areas:
 ★★★★☆ (4/5)
 
 The core scheduling behaviors — recurrence, sorting, conflict detection, and filtering — are all verified and passing. One star is withheld because the current tests do not cover the Streamlit UI layer (`app.py`) or the `Owner.display_schedule()` output, leaving some user-facing paths untested.
+
+### DEMO
+
+![alt text](image.png)
